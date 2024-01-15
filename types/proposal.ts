@@ -1,6 +1,6 @@
-type Hex = `0x${string}`;
+export type Hex = `0x${string}`;
 
-interface Main {
+export interface ProposalSystem {
   address: Hex;
   blockNumber: number;
   callPermissions: {
@@ -25,7 +25,7 @@ interface Main {
     total: string; // it's "0"
   };
   schemes: {
-    [key: Hex]: SchemeEvent;
+    [key: Hex]: Scheme;
   };
   version: number;
   votingMachines: {
@@ -53,7 +53,7 @@ interface ReputationEvent {
   tx: Hex;
 }
 
-interface Proposal {
+export interface Proposal {
   boostedPhaseTime: string;
   callData: string[];
   confidenceThreshold: string;
@@ -91,7 +91,7 @@ interface CreationEvent {
   tx: Hex;
 }
 
-interface SchemeEvent {
+interface Scheme {
   address: Hex;
   boostedProposals: string;
   boostedVoteRequiredPercentage: number;
@@ -100,6 +100,17 @@ interface SchemeEvent {
   maxSecondsForExecution: number;
   name: string;
   newProposalEvents: NewProposalEvent[];
+  paramsHash: Hex;
+  permissions: {
+    canChangeConstraints: boolean;
+    canGenericCall: boolean;
+    canRegisterSchemes: boolean;
+    canUpgrade: boolean;
+  };
+  proposalIds: Hex[];
+  registered: boolean;
+  type: string;
+  votingMachine: Hex;
 }
 
 interface NewProposalEvent {
@@ -110,17 +121,6 @@ interface NewProposalEvent {
   timestamp: number;
   transactionIndex: number;
   tx: Hex;
-  paramsHash: Hex;
-  permissions: {
-    canChangeConstraints: boolean;
-    canGenericCall: boolean;
-    canRegisterSchemes: boolean;
-    canUpgrade: boolean;
-  };
-  proposalIds: Hex[];
-  registered: boolean;
-  type: string; // ? currently, only "ContributionReward"?
-  votingMachine: Hex;
 }
 
 interface VotingMachine {
@@ -132,7 +132,7 @@ interface VotingMachine {
 interface VotingMachineNewProposalEvent {
   address: Hex;
   blockNumber: number;
-  event: string; // ? currently, only "NewProposal"?
+  event: string;
   logIndex: number;
   paramHash: Hex;
   proposalId: Hex;
