@@ -126,26 +126,50 @@ interface NewProposalEvent {
 interface VotingMachine {
   events: {
     newProposal: VotingMachineNewProposalEvent[];
+    // proposalStateChanges: VotingMachineNewProposalEvent[];
+    // redeems: VotingMachineNewProposalEvent[];
+    // redeemsDaoBounty: VotingMachineNewProposalEvent[];
+    // redeemsRep: VotingMachineNewProposalEvent[];
+    // stakes: VotingMachineNewProposalEvent[];
+    votes: VotingMachineVoteEvent[];
   };
-}
-
-interface VotingMachineNewProposalEvent {
-  address: Hex;
-  blockNumber: number;
-  event: string;
-  logIndex: number;
-  paramHash: Hex;
-  proposalId: Hex;
-  proposer: Hex;
-  signature: Hex;
-  timestamp: number;
-  transactionIndex: number;
-  tx: Hex;
   name: string;
   token: Hex;
   votingParameters: {
     [key: Hex]: VotingParameters;
   };
+}
+
+interface VotingMachineBaseEvent {
+  address: Hex;
+  blockNumber: number;
+  event:
+    | "VoteProposal"
+    | "NewProposal"
+    | "StateChange"
+    | "Redeem"
+    | "RedeemDaoBounty"
+    | "RedeemReputation"
+    | "Stake"
+    | "VoteProposal";
+  logIndex: number;
+  proposalId: Hex;
+  signature: Hex;
+  transactionIndex: number;
+  tx: Hex;
+}
+
+export interface VotingMachineNewProposalEvent extends VotingMachineBaseEvent {
+  paramHash: Hex;
+  proposer: Hex;
+  timestamp: number;
+}
+
+export interface VotingMachineVoteEvent extends VotingMachineBaseEvent {
+  amount: string;
+  preBoosted: boolean;
+  vote: string;
+  voter: Hex;
 }
 
 interface VotingParameters {
