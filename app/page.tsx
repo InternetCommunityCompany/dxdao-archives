@@ -18,6 +18,7 @@ import { useState } from "react";
 import { fuzzyFilter, getProposalData } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
 import { Chain } from "@/types/proposal";
+import Link from "next/link";
 
 type Proposal = ReturnType<typeof getProposalData>;
 
@@ -101,8 +102,8 @@ export default function Home() {
                         header.getContext()
                       )}
                       {{
-                        asc: " 🔼",
-                        desc: " 🔽",
+                        asc: " ▲",
+                        desc: " ▼",
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
                     {header.column.getCanFilter() ? (
@@ -116,15 +117,22 @@ export default function Home() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      <Link href={`/p/${row.original.id}`}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </Link>
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 

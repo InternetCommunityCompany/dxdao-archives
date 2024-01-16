@@ -6,7 +6,8 @@ import { FilterFn } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
 
 interface Proposal {
-  title: string;
+  title?: string;
+  description?: string;
   id: Hex;
   proposer: Hex;
   votes: {
@@ -29,9 +30,13 @@ export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
 
   proposalKeys.forEach((proposalId) => {
     const proposal = proposalList[proposalId];
+
     const title = ipfsData[proposalId]?.title;
+    const description = ipfsData[proposalId]?.description;
+
     proposalMap.set(proposalId, {
       title,
+      description,
       id: proposal.id,
       proposer: proposal.proposer,
       votes: [],
@@ -55,6 +60,15 @@ export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
 
   const proposals = Array.from(proposalMap.values());
   return proposals;
+};
+
+export const getProposalById = (
+  id: Hex | string,
+  chain: Chain = "gnosis"
+): Proposal | undefined => {
+  const proposals = getProposalData(chain);
+  const proposal = proposals.find((proposal) => proposal.id === id);
+  return proposal;
 };
 
 export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
