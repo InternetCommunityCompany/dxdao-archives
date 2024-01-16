@@ -8,20 +8,20 @@ export interface IpfsData {
 }
 
 export interface ProposalSystem {
-  address: Hex;
-  blockNumber: number;
-  callPermissions: {
-    [key: Hex]: {
-      [key: Hex]: {
-        [key: Hex]: {
-          [key: Hex]: {
-            fromTime: string;
-            value: string;
-          };
-        };
-      };
-    };
-  };
+  // address: Hex;
+  // blockNumber: number;
+  // callPermissions: {
+  //   [key: Hex]: {
+  //     [key: Hex]: {
+  //       [key: Hex]: {
+  //         [key: Hex]: {
+  //           fromTime: string;
+  //           value: string;
+  //         };
+  //       };
+  //     };
+  //   };
+  // };
   ipfsHashes: IpfsHash[];
   networkId: number;
   proposals: {
@@ -100,20 +100,20 @@ interface CreationEvent {
 
 interface Scheme {
   address: Hex;
-  boostedProposals: string;
-  boostedVoteRequiredPercentage: number;
-  controllerAddress: Hex;
-  maxRepPercentageChange: number | string;
-  maxSecondsForExecution: number;
+  // boostedProposals: string;
+  // boostedVoteRequiredPercentage: number;
+  // controllerAddress: Hex;
+  // maxRepPercentageChange: number | string;
+  // maxSecondsForExecution: number;
   name: string;
   newProposalEvents: NewProposalEvent[];
-  paramsHash: Hex;
-  permissions: {
-    canChangeConstraints: boolean;
-    canGenericCall: boolean;
-    canRegisterSchemes: boolean;
-    canUpgrade: boolean;
-  };
+  // paramsHash: Hex;
+  // permissions: {
+  //   canChangeConstraints: boolean;
+  //   canGenericCall: boolean;
+  //   canRegisterSchemes: boolean;
+  //   canUpgrade: boolean;
+  // };
   proposalIds: Hex[];
   registered: boolean;
   type: string;
