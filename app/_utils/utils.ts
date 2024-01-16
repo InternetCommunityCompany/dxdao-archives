@@ -1,5 +1,6 @@
-import { Hex, ProposalSystem } from "@/types/proposal";
+import { Chain, Hex, ProposalSystem } from "@/types/proposal";
 import gnosisProposals from "@/data/gnosisProposals.json";
+import mainnetProposals from "@/data/mainnetProposals.json";
 import { FilterFn } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
 
@@ -14,9 +15,15 @@ interface Proposal {
   }[];
 }
 
-export const parseProposal = (): Proposal[] => {
-  const data = gnosisProposals as ProposalSystem;
+export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
+  const data =
+    chain === "mainnet"
+      ? (mainnetProposals as ProposalSystem)
+      : (gnosisProposals as ProposalSystem);
   const proposalList = data.proposals;
+  // console log proposal list length
+  console.log("proposal list length: ", Object.keys(proposalList).length);
+
   const proposalKeys = Object.keys(proposalList) as Hex[];
 
   const proposalMap = new Map<Hex, Proposal>();

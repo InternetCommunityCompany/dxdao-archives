@@ -1,4 +1,5 @@
 export type Hex = `0x${string}`;
+export type Chain = "mainnet" | "gnosis";
 
 export interface ProposalSystem {
   address: Hex;

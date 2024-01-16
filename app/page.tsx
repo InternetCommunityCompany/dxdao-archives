@@ -15,17 +15,20 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { fuzzyFilter, parseProposal } from "./_utils/utils";
+import { fuzzyFilter, getProposalData } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
+import { Chain } from "@/types/proposal";
 
-const data = parseProposal();
+type Proposal = ReturnType<typeof getProposalData>;
 
 export default function Home() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [chain, setChain] = useState<Chain>("gnosis");
+  const [data, setData] = useState(() => getProposalData(chain));
 
-  const columnHelper = createColumnHelper<ReturnType<typeof parseProposal>>();
+  const columnHelper = createColumnHelper<Proposal>();
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -68,6 +71,17 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>
+        <button
+          onClick={() => {
+            const nextChain = chain === "gnosis" ? "mainnet" : "gnosis";
+            setData(getProposalData(nextChain));
+            setChain(nextChain);
+          }}
+        >
+          {chain}
+        </button>
+      </div>
+      <div>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -102,23 +116,80 @@ export default function Home() {
             ))}
           </thead>
           <tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 100)
-              .map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
+
+        <div className="flex items-center gap-2">
+          <button
+            className="border rounded p-1"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {"<<"}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {"<"}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {">"}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            {">>"}
+          </button>
+          <span className="flex items-center gap-1">
+            <div>Page</div>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </strong>
+          </span>
+          <span className="flex items-center gap-1">
+            | Go to page:
+            <input
+              type="number"
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+              className="border p-1 rounded w-16 text-black"
+            />
+          </span>
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+            className="text-black bg-white"
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </main>
   );
