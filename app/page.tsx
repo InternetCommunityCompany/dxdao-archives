@@ -1,17 +1,16 @@
 "use client";
 
-import {
-  ProposalSystem,
-  VotingMachineNewProposalEvent,
-  Hex,
-} from "@/types/proposal";
+import { ProposalSystem, Hex } from "@/types/proposal";
 import {
   createColumnHelper,
   useReactTable,
   getCoreRowModel,
   flexRender,
+  getSortedRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 import gnosisProposals from "@/data/gnosisProposals.json";
+import { useState } from "react";
 
 interface Proposal {
   title: string;
@@ -25,7 +24,6 @@ interface Proposal {
 }
 
 const parseProposal = (): Proposal[] => {
-  // get a list of all the proposals
   const data = gnosisProposals as ProposalSystem;
   const proposalList = data.proposals;
   const proposalKeys = Object.keys(proposalList) as Hex[];
@@ -61,8 +59,10 @@ const parseProposal = (): Proposal[] => {
   return proposals;
 };
 
+const data = parseProposal();
+
 export default function Home() {
-  const data = parseProposal();
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const columnHelper = createColumnHelper<Proposal>();
   const columns = [
@@ -80,7 +80,12 @@ export default function Home() {
   const table = useReactTable({
     columns,
     data,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -92,25 +97,44 @@ export default function Home() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {{
+                        asc: " 🔼",
+                        desc: " 🔽",
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table
+              .getRowModel()
+              .rows.slice(0, 100)
+              .map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
