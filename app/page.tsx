@@ -2,15 +2,25 @@
 
 import { ProposalSystem, Hex } from "@/types/proposal";
 import {
-  createColumnHelper,
+  Column,
+  Table,
   useReactTable,
+  ColumnFiltersState,
   getCoreRowModel,
-  flexRender,
+  getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
+  getPaginationRowModel,
   getSortedRowModel,
+  FilterFn,
+  flexRender,
+  createColumnHelper,
   SortingState,
 } from "@tanstack/react-table";
 import gnosisProposals from "@/data/gnosisProposals.json";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 interface Proposal {
   title: string;
@@ -22,6 +32,19 @@ interface Proposal {
     voter: Hex;
   }[];
 }
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
 
 const parseProposal = (): Proposal[] => {
   const data = gnosisProposals as ProposalSystem;
@@ -61,8 +84,87 @@ const parseProposal = (): Proposal[] => {
 
 const data = parseProposal();
 
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<any, unknown>;
+  table: Table<any>;
+}) {
+  const firstValue = table
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id);
+
+  const columnFilterValue = column.getFilterValue();
+
+  const sortedUniqueValues = useMemo(
+    () =>
+      typeof firstValue === "number"
+        ? []
+        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [column.getFacetedUniqueValues()]
+  );
+
+  return (
+    <>
+      <datalist id={column.id + "list"}>
+        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
+          <option value={value} key={value} />
+        ))}
+      </datalist>
+      <DebouncedInput
+        type="text"
+        value={(columnFilterValue ?? "") as string}
+        onChange={(value) => column.setFilterValue(value)}
+        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+        className="w-36 border shadow rounded text-black"
+        list={column.id + "list"}
+      />
+      <div className="h-1" />
+    </>
+  );
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number;
+  onChange: (value: string | number) => void;
+  debounce?: number;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value);
+    }, debounce);
+
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+}
+
 export default function Home() {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const columnHelper = createColumnHelper<Proposal>();
   const columns = [
@@ -82,10 +184,26 @@ export default function Home() {
     data,
     state: {
       sorting,
+      columnFilters,
+      globalFilter,
     },
-    onSortingChange: setSorting,
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    // Core
     getCoreRowModel: getCoreRowModel(),
+    // Sorting
+    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    // Filtering
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
 
   return (
@@ -114,6 +232,11 @@ export default function Home() {
                         desc: " 🔽",
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
+                    {header.column.getCanFilter() ? (
+                      <div>
+                        <Filter column={header.column} table={table} />
+                      </div>
+                    ) : null}
                   </th>
                 ))}
               </tr>
