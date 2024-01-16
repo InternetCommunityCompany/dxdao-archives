@@ -1,6 +1,7 @@
-import { Chain, Hex, ProposalSystem } from "@/types/proposal";
 import gnosisProposals from "@/data/gnosisProposals.json";
 import mainnetProposals from "@/data/mainnetProposals.json";
+import ipfsDataFile from "@/ipfsData.json";
+import { Chain, Hex, ProposalSystem, IpfsData } from "@/types/proposal";
 import { FilterFn } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
 
@@ -16,22 +17,21 @@ interface Proposal {
 }
 
 export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
+  const ipfsData = ipfsDataFile as { [key: string]: IpfsData };
   const data =
     chain === "mainnet"
       ? (mainnetProposals as ProposalSystem)
       : (gnosisProposals as ProposalSystem);
+
   const proposalList = data.proposals;
-  // console log proposal list length
-  console.log("proposal list length: ", Object.keys(proposalList).length);
-
   const proposalKeys = Object.keys(proposalList) as Hex[];
-
   const proposalMap = new Map<Hex, Proposal>();
 
   proposalKeys.forEach((proposalId) => {
     const proposal = proposalList[proposalId];
+    const title = ipfsData[proposalId]?.title;
     proposalMap.set(proposalId, {
-      title: proposal.title,
+      title,
       id: proposal.id,
       proposer: proposal.proposer,
       votes: [],

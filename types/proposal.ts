@@ -1,6 +1,12 @@
 export type Hex = `0x${string}`;
 export type Chain = "mainnet" | "gnosis";
 
+export interface IpfsData {
+  description: string;
+  title: string;
+  hash: string;
+}
+
 export interface ProposalSystem {
   address: Hex;
   blockNumber: number;
@@ -97,7 +103,7 @@ interface Scheme {
   boostedProposals: string;
   boostedVoteRequiredPercentage: number;
   controllerAddress: Hex;
-  maxRepPercentageChange: number;
+  maxRepPercentageChange: number | string;
   maxSecondsForExecution: number;
   name: string;
   newProposalEvents: NewProposalEvent[];
