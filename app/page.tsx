@@ -19,6 +19,7 @@ import { fuzzyFilter, getProposalData } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
 import { Chain } from "@/types/proposal";
 import Link from "next/link";
+import ChainToggle from "./_components/ChainToggle";
 
 type Proposal = ReturnType<typeof getProposalData>;
 
@@ -32,12 +33,15 @@ export default function Home() {
   const columnHelper = createColumnHelper<Proposal>();
   const columns = [
     columnHelper.accessor("id", {
+      header: "Proposal ID",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("proposer", {
+      header: "Proposer",
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor("title", {
+      header: "Proposal title",
       cell: (info) => info.getValue(),
     }),
   ];
@@ -71,19 +75,11 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <button
-          onClick={() => {
-            const nextChain = chain === "gnosis" ? "mainnet" : "gnosis";
-            setData(getProposalData(nextChain));
-            setChain(nextChain);
-          }}
-        >
-          {chain}
-        </button>
+      <div className="p-5">
+        <ChainToggle chain={chain} setChain={setChain} setData={setData} />
       </div>
       <div>
-        <table>
+        <table className="border">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -119,9 +115,12 @@ export default function Home() {
           <tbody>
             {table.getRowModel().rows.map((row) => {
               return (
-                <tr key={row.id}>
+                <tr
+                  key={row.id}
+                  className="border bg-zinc-900 hover:bg-zinc-800"
+                >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <td key={cell.id} className="p-4">
                       <Link href={`/p/${row.original.id}`}>
                         {flexRender(
                           cell.column.columnDef.cell,
