@@ -21,6 +21,7 @@ import { Chain } from "@/types/proposal";
 import Link from "next/link";
 import ChainToggle from "./_components/ChainToggle";
 import Pagination from "./_components/Pagination";
+import StatusIndicator from "./_components/StatusIndicator";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
@@ -35,24 +36,48 @@ export default function Home() {
   const columns = [
     columnHelper.accessor("title", {
       header: "Proposal title",
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Link
+          className="font-medium tracking-tighter text-stone-800 text-base"
+          href={`/p/${info.row.original.id}`}
+        >
+          {info.getValue()}
+        </Link>
+      ),
     }),
     columnHelper.accessor("submittedTime", {
       header: "Submitted time",
-      cell: (info) =>
-        new Date(info.row.original.submittedTime).toLocaleDateString(),
+      cell: (info) => {
+        const formattedDate = new Date(
+          info.row.original.submittedTime
+        ).toLocaleDateString("en-US", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+
+        return (
+          <span className="text-xs text-stone-500 font-semibold">
+            {formattedDate}
+          </span>
+        );
+      },
     }),
     columnHelper.accessor("proposer", {
       header: "From",
-      cell: (info) => shortenAddress(info.getValue()),
-    }),
-    columnHelper.accessor("id", {
-      header: "Proposal ID",
-      cell: (info) => shortenAddress(info.getValue()),
+      cell: (info) => (
+        <span className="text-xs font-mono text-stone-500 font-semibold">
+          {shortenAddress(info.getValue())}
+        </span>
+      ),
     }),
     columnHelper.accessor("isAccepted", {
       header: "State",
-      cell: (info) => (info.row.original.isAccepted ? "Accepted" : "Rejected"),
+      cell: (info) => (
+        <span className="flex justify-center">
+          <StatusIndicator isAccepted={info.row.original.isAccepted} />
+        </span>
+      ),
     }),
   ];
 
@@ -85,11 +110,14 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
+      <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-jet whitespace-pre md:items-stretch items-center">
+        dxDAO archives
+      </h1>
       <div className="p-5">
         <ChainToggle chain={chain} setChain={setChain} setData={setData} />
       </div>
       <div className="flex flex-col items-center gap-5">
-        <table className="border">
+        <table className="">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -127,16 +155,14 @@ export default function Home() {
               return (
                 <tr
                   key={row.id}
-                  className="border bg-zinc-900 hover:bg-zinc-800"
+                  className="border-b border-stone-400 bg-transparent hover:bg-stone-200"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="p-4">
-                      <Link href={`/p/${row.original.id}`}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Link>
+                    <td key={cell.id} className="text-stone-800 p-4">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </td>
                   ))}
                 </tr>
