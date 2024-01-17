@@ -170,7 +170,7 @@ export default function Home() {
                     className="border-b border-stone-400 bg-transparent hover:bg-stone-200"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="text-stone-800 p-4">
+                      <td key={cell.id} className="text-stone-800 py-4">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

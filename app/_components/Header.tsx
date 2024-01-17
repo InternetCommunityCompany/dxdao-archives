@@ -5,11 +5,15 @@ import separator from "../_assets/dotted-squiggly.svg";
 const Header = () => {
   return (
     <>
-      <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-white whitespace-pre md:items-stretch items-center">
-        dxDAO archives
+      <h1 className="font-serif flex flex-col text-6xl text-center text-slate-600 whitespace-pre items-center font-extralight tracking-tighter mb-4">
+        <span className="text-xl font-bold text-slate-500 -mb-2 tracking-normal">
+          the
+        </span>
+        <span className="-mb-4">dxDAO</span>
+        <span>archives</span>
       </h1>
 
-      <h2 className="flex flex-col items-center font-serif text-center text-slate-800">
+      <h2 className="flex flex-col items-center font-serif text-center text-slate-600">
         <span className="text-xs">by</span>
         <span className="flex">
           THE
