@@ -10,66 +10,76 @@ interface Props {
 
 const Pagination = ({ table }: Props) => {
   return (
-    <div className="flex items-center gap-2">
-      <button
-        className="border rounded p-1"
-        onClick={() => table.setPageIndex(0)}
-        disabled={!table.getCanPreviousPage()}
-      >
-        {"<<"}
-      </button>
-      <button
-        className="border rounded p-1"
-        onClick={() => table.previousPage()}
-        disabled={!table.getCanPreviousPage()}
-      >
-        {"<"}
-      </button>
-      <button
-        className="border rounded p-1"
-        onClick={() => table.nextPage()}
-        disabled={!table.getCanNextPage()}
-      >
-        {">"}
-      </button>
-      <button
-        className="border rounded p-1"
-        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-        disabled={!table.getCanNextPage()}
-      >
-        {">>"}
-      </button>
-      <span className="flex items-center gap-1">
-        <div>Page</div>
-        <strong>
-          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-        </strong>
-      </span>
-      <span className="flex items-center gap-1">
-        | Go to page:
-        <input
-          type="number"
-          defaultValue={table.getState().pagination.pageIndex + 1}
+    <div className="flex justify-between w-full items-center">
+      <div>
+        <select
+          value={table.getState().pagination.pageSize}
           onChange={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-            table.setPageIndex(page);
+            table.setPageSize(Number(e.target.value));
           }}
-          className="border p-1 rounded w-16 text-black"
-        />
-      </span>
-      <select
-        value={table.getState().pagination.pageSize}
-        onChange={(e) => {
-          table.setPageSize(Number(e.target.value));
-        }}
-        className="text-black bg-white"
-      >
-        {[10, 25, 50, 100, 500].map((pageSize) => (
-          <option key={pageSize} value={pageSize}>
-            Show {pageSize}
-          </option>
-        ))}
-      </select>
+          className="text-stone-500 border-stone-400 text-xs font-normal border p-2 bg-transparent"
+        >
+          {[10, 25, 50, 100, 500].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex text-sm">
+        <button
+          className="border-l  p-1 w-9 text-stone-500 border-stone-400 hover:bg-stone-200 cursor-pointer hover:text-stone-600"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </button>
+        <button
+          className="border-l border-r  p-1 w-9 text-stone-500 border-stone-400 hover:bg-stone-200 cursor-pointer hover:text-stone-600"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <span className="flex items-center gap-1 text-stone-500 px-3">
+          <div>page</div>
+          <span className="font-medium">
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </span>
+        </span>
+
+        <button
+          className="border-l border-r  p-1 w-9 text-stone-500 border-stone-400 hover:bg-stone-200 cursor-pointer hover:text-stone-600"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <button
+          className="border-r  p-1 w-9 text-stone-500 border-stone-400 hover:bg-stone-200 cursor-pointer hover:text-stone-600"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {">>"}
+        </button>
+      </div>
+
+      <div>
+        <span className="flex items-center gap-1 text-stone-500 text-xs">
+          go to page:
+          <input
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              table.setPageIndex(page);
+            }}
+            className="border px-1 py-2 w-16  border-stone-400 text-right bg-transparent"
+          />
+        </span>
+      </div>
     </div>
   );
 };

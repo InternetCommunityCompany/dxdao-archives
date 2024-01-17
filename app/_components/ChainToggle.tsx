@@ -23,8 +23,8 @@ const ToggleButton = ({
 }) => {
   return (
     <button
-      className={`text-sm border text-zinc-600 border-zinc-500 hover:text-zinc-400 hover:bg-zinc-800 p-1 rounded-md tracking-tighter ${
-        selected ? "bg-zinc-700 text-zinc-200" : ""
+      className={`text-xs border text-stone-500 font-semibold border-zinc-400 hover:text-zinc-700 hover:bg-stone-100 py-1 px-2 rounded-md tracking-tighter ${
+        selected ? "bg-stone-100 border-zinc-500" : ""
       }`}
       onClick={() => {
         setData(getProposalData(chain));

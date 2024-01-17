@@ -1,45 +1,19 @@
-import { Column, Table } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { Column } from "@tanstack/react-table";
 import { DebouncedInput } from "./DebouncedInput";
 
-export function Filter({
-  column,
-  table,
-}: {
-  column: Column<any, unknown>;
-  table: Table<any>;
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id);
-
+export function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue();
-
-  const sortedUniqueValues = useMemo(
-    () =>
-      typeof firstValue === "number"
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [column.getFacetedUniqueValues()]
-  );
 
   return (
     <>
-      <datalist id={column.id + "list"}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
-      </datalist>
       <DebouncedInput
         type="text"
         value={(columnFilterValue ?? "") as string}
         onChange={(value) => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded text-black"
+        placeholder="Search..."
+        className="font-normal rounded p-1 bg-transparent border-b border-stone-400 focus:border-stone-500 focus:outline-none text-stone-800"
         list={column.id + "list"}
       />
-      <div className="h-1" />
     </>
   );
 }

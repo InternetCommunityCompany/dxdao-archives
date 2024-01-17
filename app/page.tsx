@@ -13,6 +13,7 @@ import {
   flexRender,
   createColumnHelper,
   SortingState,
+  Table,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { fuzzyFilter, getProposalData, shortenAddress } from "./_utils/utils";
@@ -24,6 +25,10 @@ import Pagination from "./_components/Pagination";
 import StatusIndicator from "./_components/StatusIndicator";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
+
+const getColumnType = (columnId: string, table: Table<Proposal>) => {
+  return typeof table.getPreFilteredRowModel().flatRows[0]?.getValue(columnId);
+};
 
 export default function Home() {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -109,68 +114,77 @@ export default function Home() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-jet whitespace-pre md:items-stretch items-center">
-        dxDAO archives
-      </h1>
-      <div className="p-5">
-        <ChainToggle chain={chain} setChain={setChain} setData={setData} />
-      </div>
-      <div className="flex flex-col items-center gap-5">
-        <table className="">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " ▲",
-                        desc: " ▼",
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                    {header.column.getCanFilter() ? (
-                      <div>
-                        <Filter column={header.column} table={table} />
-                      </div>
-                    ) : null}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => {
-              return (
+    <main className="flex min-h-screen flex-col items-center pt-24">
+      <div>
+        <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-jet whitespace-pre md:items-stretch items-center">
+          dxDAO archives
+        </h1>
+        <div className="pb-4 self-start">
+          <ChainToggle chain={chain} setChain={setChain} setData={setData} />
+        </div>
+        <div className="flex flex-col items-center gap-5">
+          <table className="">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
                 <tr
-                  key={row.id}
-                  className="border-b border-stone-400 bg-transparent hover:bg-stone-200"
+                  key={headerGroup.id}
+                  className="align-bottom text-left text-stone-500 bg-stone-200 text-sm"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="text-stone-800 p-4">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? "cursor-pointer select-none"
+                            : "",
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {header.column.getCanFilter() &&
+                        getColumnType(header.column.id, table) !== "boolean" ? (
+                          <div className="mb-4">
+                            <Filter column={header.column} />
+                          </div>
+                        ) : null}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " ▲",
+                          desc: " ▼",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </th>
                   ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <Pagination table={table} />
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <tr
+                    key={row.id}
+                    className="border-b border-stone-400 bg-transparent hover:bg-stone-200"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="text-stone-800 p-4">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
+          <div className="my-6 flex w-full">
+            <Pagination table={table} />
+          </div>
+        </div>
       </div>
     </main>
   );
