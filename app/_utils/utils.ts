@@ -72,8 +72,15 @@ export const getProposalById = (
   id: Hex | string,
   chain: Chain = "gnosis"
 ): Proposal | undefined => {
-  const proposals = getProposalData(chain);
-  const proposal = proposals.find((proposal) => proposal.id === id);
+  let proposals = getProposalData(chain);
+  let proposal = proposals.find((proposal) => proposal.id === id);
+
+  if (!proposal) {
+    // try to find the proposal on the other chain
+    const otherChain = chain === "gnosis" ? "mainnet" : "gnosis";
+    proposals = getProposalData(otherChain);
+    proposal = proposals.find((proposal) => proposal.id === id);
+  }
   return proposal;
 };
 
