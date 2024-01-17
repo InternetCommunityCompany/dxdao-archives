@@ -23,6 +23,9 @@ import Link from "next/link";
 import ChainToggle from "./_components/ChainToggle";
 import Pagination from "./_components/Pagination";
 import StatusIndicator from "./_components/StatusIndicator";
+import separator from "./_assets/dotted-squiggly.svg";
+import Image from "next/image";
+import Header from "./_components/Header";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
@@ -114,11 +117,10 @@ export default function Home() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center pt-24">
+    <main className="flex min-h-screen flex-col items-center pt-16">
       <div>
-        <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-jet whitespace-pre md:items-stretch items-center">
-          dxDAO archives
-        </h1>
+        <Header />
+
         <div className="flex pb-4 justify-end">
           <ChainToggle chain={chain} setChain={setChain} setData={setData} />
         </div>
