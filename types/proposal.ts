@@ -179,6 +179,12 @@ export interface VotingMachineVoteEvent extends VotingMachineBaseEvent {
   voter: Hex;
 }
 
+export interface VotingMachineProposalStateChangeEvent
+  extends VotingMachineBaseEvent {
+  state: string;
+  timestamp: number;
+}
+
 interface VotingParameters {
   activationTime: string;
   boostedVotePeriodLimit: string;

@@ -10,6 +10,8 @@ interface Proposal {
   description?: string;
   id: Hex;
   proposer: Hex;
+  isAccepted: boolean;
+  submittedTime: number;
   votes: {
     amount: string;
     vote: string;
@@ -33,12 +35,16 @@ export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
 
     const title = ipfsData[proposalId]?.title;
     const description = ipfsData[proposalId]?.description;
+    const isAccepted = Boolean(proposal.stateInVotingMachine === 2);
+    const submittedTime = Number.parseInt(proposal.submittedTime) * 1000;
 
     proposalMap.set(proposalId, {
       title,
       description,
       id: proposal.id,
       proposer: proposal.proposer,
+      isAccepted,
+      submittedTime,
       votes: [],
     });
   });

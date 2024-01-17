@@ -21,7 +21,7 @@ import { Chain } from "@/types/proposal";
 import Link from "next/link";
 import ChainToggle from "./_components/ChainToggle";
 
-type Proposal = ReturnType<typeof getProposalData>;
+type Proposal = ReturnType<typeof getProposalData>[0];
 
 export default function Home() {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -43,6 +43,15 @@ export default function Home() {
     columnHelper.accessor("title", {
       header: "Proposal title",
       cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("isAccepted", {
+      header: "State",
+      cell: (info) => (info.row.original.isAccepted ? "Accepted" : "Rejected"),
+    }),
+    columnHelper.accessor("submittedTime", {
+      header: "Submitted time",
+      cell: (info) =>
+        new Date(info.row.original.submittedTime).toLocaleDateString(),
     }),
   ];
 
