@@ -15,11 +15,12 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { fuzzyFilter, getProposalData } from "./_utils/utils";
+import { fuzzyFilter, getProposalData, shortenAddress } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
 import { Chain } from "@/types/proposal";
 import Link from "next/link";
 import ChainToggle from "./_components/ChainToggle";
+import Pagination from "./_components/Pagination";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
@@ -32,26 +33,26 @@ export default function Home() {
 
   const columnHelper = createColumnHelper<Proposal>();
   const columns = [
-    columnHelper.accessor("id", {
-      header: "Proposal ID",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("proposer", {
-      header: "Proposer",
-      cell: (info) => info.getValue(),
-    }),
     columnHelper.accessor("title", {
       header: "Proposal title",
       cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("isAccepted", {
-      header: "State",
-      cell: (info) => (info.row.original.isAccepted ? "Accepted" : "Rejected"),
     }),
     columnHelper.accessor("submittedTime", {
       header: "Submitted time",
       cell: (info) =>
         new Date(info.row.original.submittedTime).toLocaleDateString(),
+    }),
+    columnHelper.accessor("proposer", {
+      header: "From",
+      cell: (info) => shortenAddress(info.getValue()),
+    }),
+    columnHelper.accessor("id", {
+      header: "Proposal ID",
+      cell: (info) => shortenAddress(info.getValue()),
+    }),
+    columnHelper.accessor("isAccepted", {
+      header: "State",
+      cell: (info) => (info.row.original.isAccepted ? "Accepted" : "Rejected"),
     }),
   ];
 
@@ -83,11 +84,11 @@ export default function Home() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center p-24">
       <div className="p-5">
         <ChainToggle chain={chain} setChain={setChain} setData={setData} />
       </div>
-      <div>
+      <div className="flex flex-col items-center gap-5">
         <table className="border">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -143,69 +144,7 @@ export default function Home() {
             })}
           </tbody>
         </table>
-
-        <div className="flex items-center gap-2">
-          <button
-            className="border rounded p-1"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {"<<"}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {"<"}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {">"}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            {">>"}
-          </button>
-          <span className="flex items-center gap-1">
-            <div>Page</div>
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </strong>
-          </span>
-          <span className="flex items-center gap-1">
-            | Go to page:
-            <input
-              type="number"
-              defaultValue={table.getState().pagination.pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                table.setPageIndex(page);
-              }}
-              className="border p-1 rounded w-16 text-black"
-            />
-          </span>
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
-            }}
-            className="text-black bg-white"
-          >
-            {[10, 25, 50, 100, 500].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Pagination table={table} />
       </div>
     </main>
   );

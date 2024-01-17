@@ -89,3 +89,9 @@ export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
+
+export const shortenAddress = (address: string): string => {
+  const start = address.slice(0, 6);
+  const end = address.slice(-4);
+  return `${start}...${end}`;
+};
