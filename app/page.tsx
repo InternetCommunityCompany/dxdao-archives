@@ -119,7 +119,7 @@ export default function Home() {
         <h1 className="font-serif flex flex-col text-4xl sm:text-6xl text-center text-jet whitespace-pre md:items-stretch items-center">
           dxDAO archives
         </h1>
-        <div className="pb-4 self-start">
+        <div className="flex pb-4 justify-end">
           <ChainToggle chain={chain} setChain={setChain} setData={setData} />
         </div>
         <div className="flex flex-col items-center gap-5">

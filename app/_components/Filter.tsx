@@ -11,7 +11,7 @@ export function Filter({ column }: { column: Column<any, unknown> }) {
         value={(columnFilterValue ?? "") as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder="Search..."
-        className="font-normal rounded p-1 bg-transparent border-b border-stone-400 focus:border-stone-500 focus:outline-none text-stone-800"
+        className="font-normal p-1 bg-transparent border-b border-stone-400 focus:border-stone-500 focus:outline-none text-stone-800"
         list={column.id + "list"}
       />
     </>

@@ -23,7 +23,7 @@ const ToggleButton = ({
 }) => {
   return (
     <button
-      className={`text-xs border text-stone-500 font-semibold border-zinc-400 hover:text-zinc-700 hover:bg-stone-100 py-1 px-2 rounded-md tracking-tighter ${
+      className={`text-xs border text-stone-500 font-semibold border-zinc-400 hover:text-zinc-700 hover:bg-stone-100 py-1 px-2 tracking-tighter ${
         selected ? "bg-stone-100 border-zinc-500" : ""
       }`}
       onClick={() => {
