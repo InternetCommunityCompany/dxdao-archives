@@ -15,22 +15,17 @@ import {
   SortingState,
   Table,
 } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fuzzyFilter, getProposalData, shortenAddress } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
-import { Chain } from "@/types/proposal";
 import Link from "next/link";
-import ChainToggle from "./_components/ChainToggle";
 import Pagination from "./_components/Pagination";
 import StatusIndicator from "./_components/StatusIndicator";
 import Header from "./_components/Header";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import ChainPill from "./_components/ChainPill";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
-
-const getColumnType = (columnId: string, table: Table<Proposal>) => {
-  return typeof table.getPreFilteredRowModel().flatRows[0]?.getValue(columnId);
-};
 
 export default function Home() {
   const setParam = (name: string, value: string | number) => {
@@ -43,11 +38,8 @@ export default function Home() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // const [chain, setChain] = useState<Chain>("gnosis");
-  const [data, setData] = useState(() => {
-    const chain = searchParams.get("chain") as Chain;
-    return getProposalData(chain ? "mainnet" : "gnosis");
-  });
+  const data = useMemo(() => getProposalData(), []);
+
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortParam = searchParams.get("sort");
     return sortParam ? JSON.parse(sortParam) : [];
@@ -104,6 +96,14 @@ export default function Home() {
         </span>
       ),
     }),
+    columnHelper.accessor("chain", {
+      header: "Chain",
+      cell: (info) => (
+        <span className="flex justify-center w-20">
+          <ChainPill chain={info.row.original.chain} />
+        </span>
+      ),
+    }),
   ];
 
   const table = useReactTable({
@@ -150,13 +150,6 @@ export default function Home() {
       <div>
         <Header />
 
-        <div className="flex pb-4 justify-end">
-          <ChainToggle
-            chain={(searchParams.get("chain") as Chain) ?? "gnosis"}
-            setParam={setParam}
-            setData={setData}
-          />
-        </div>
         <div className="flex flex-col items-center gap-5">
           <table className="">
             <thead>
@@ -175,8 +168,7 @@ export default function Home() {
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {header.column.getCanFilter() &&
-                        getColumnType(header.column.id, table) !== "boolean" ? (
+                        {header.column.getCanFilter() ? (
                           <div className="mb-4">
                             <Filter column={header.column} />
                           </div>

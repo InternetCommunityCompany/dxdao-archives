@@ -6,6 +6,7 @@ import { FilterFn } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils";
 
 interface Proposal {
+  chain: Chain;
   title?: string;
   description?: string;
   id: Hex;
@@ -19,14 +20,12 @@ interface Proposal {
   }[];
 }
 
-export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
+export const getProposalData = (): Proposal[] => {
   const ipfsData = ipfsDataFile as { [key: string]: IpfsData };
-  const data =
-    chain === "mainnet"
-      ? (mainnetProposals as ProposalSystem)
-      : (gnosisProposals as ProposalSystem);
+  const gnosisData = gnosisProposals as ProposalSystem;
+  const mainnetData = mainnetProposals as ProposalSystem;
 
-  const proposalList = data.proposals;
+  const proposalList = { ...gnosisData.proposals, ...mainnetData.proposals };
   const proposalKeys = Object.keys(proposalList) as Hex[];
   const proposalMap = new Map<Hex, Proposal>();
 
@@ -38,7 +37,13 @@ export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
     const isAccepted = Boolean(proposal.stateInVotingMachine === 2);
     const submittedTime = Number.parseInt(proposal.submittedTime) * 1000;
 
+    let chain: Chain;
+    const gnosisProposal = gnosisData.proposals[proposalId];
+    if (gnosisProposal) chain = "gnosis";
+    else chain = "mainnet";
+
     proposalMap.set(proposalId, {
+      chain,
       title,
       description,
       id: proposal.id,
@@ -49,10 +54,14 @@ export const getProposalData = (chain: Chain = "gnosis"): Proposal[] => {
     });
   });
 
-  const votingMachineAddresses = Object.keys(data.votingMachines) as Hex[];
+  const votingMachines = {
+    ...gnosisData.votingMachines,
+    ...mainnetData.votingMachines,
+  };
+  const votingMachineAddresses = Object.keys(votingMachines) as Hex[];
 
   votingMachineAddresses.forEach((address) => {
-    const votes = data.votingMachines[address].events.votes;
+    const votes = votingMachines[address].events.votes;
     votes.forEach((vote) => {
       const proposalId = vote.proposalId;
       const proposal = proposalMap.get(proposalId);
@@ -72,28 +81,14 @@ export const getProposalById = (
   id: Hex | string,
   chain: Chain = "gnosis"
 ): Proposal | undefined => {
-  let proposals = getProposalData(chain);
+  let proposals = getProposalData();
   let proposal = proposals.find((proposal) => proposal.id === id);
-
-  if (!proposal) {
-    // try to find the proposal on the other chain
-    const otherChain = chain === "gnosis" ? "mainnet" : "gnosis";
-    proposals = getProposalData(otherChain);
-    proposal = proposals.find((proposal) => proposal.id === id);
-  }
   return proposal;
 };
 
 export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  });
-
-  // Return if the item should be filtered in/out
+  addMeta({ itemRank });
   return itemRank.passed;
 };
 
