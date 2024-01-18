@@ -13,9 +13,8 @@ import {
   flexRender,
   createColumnHelper,
   SortingState,
-  Table,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { fuzzyFilter, getProposalData, shortenAddress } from "./_utils/utils";
 import { Filter } from "./_components/Filter";
 import Link from "next/link";
@@ -28,21 +27,26 @@ import ChainPill from "./_components/ChainPill";
 type Proposal = ReturnType<typeof getProposalData>[0];
 
 export default function Home() {
-  const setParam = (name: string, value: string | number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(name, `${value}`);
-    router.push(pathname + "?" + params.toString(), { scroll: false });
-  };
-
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const setParam = useCallback(
+    (name: string, value: string | number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, `${value}`);
+      router.push(pathname + "?" + params.toString(), { scroll: false });
+    },
+    [pathname, router, searchParams]
+  );
 
   const data = useMemo(() => getProposalData(), []);
 
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortParam = searchParams.get("sort");
-    return sortParam ? JSON.parse(sortParam) : [];
+    return sortParam
+      ? JSON.parse(sortParam)
+      : [{ id: "submittedTime", desc: true }];
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
     const filterParam = searchParams.get("filters");
@@ -63,7 +67,7 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("submittedTime", {
-      header: () => <span className="flex justify-center">Submitted</span>,
+      header: () => <span className="text-center">Submitted</span>,
       cell: (info) => {
         const formattedDate = new Date(
           info.row.original.submittedTime
@@ -74,7 +78,7 @@ export default function Home() {
         });
 
         return (
-          <span className="text-xs text-stone-500 font-semibold px-3">
+          <span className="text-xs text-stone-500 font-semibold px-3 text-right">
             {formattedDate}
           </span>
         );
@@ -134,15 +138,21 @@ export default function Home() {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
 
+  useEffect(
+    () => setParam("sort", JSON.stringify(sorting)),
+    [sorting, setParam]
+  );
+  useEffect(
+    () => setParam("filters", JSON.stringify(columnFilters)),
+    [columnFilters, setParam]
+  );
+
   useEffect(() => {
     const page = searchParams.get("page");
     const show = searchParams.get("show");
 
     table.setPageIndex(Number(page ?? 1) - 1);
     table.setPageSize(Number(show ?? 10));
-    setParam("sort", JSON.stringify(sorting));
-    setParam("filters", JSON.stringify(columnFilters));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, table, sorting, columnFilters]);
 
   return (
