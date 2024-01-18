@@ -63,7 +63,7 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("submittedTime", {
-      header: "Submitted time",
+      header: () => <span className="flex justify-center">Submitted</span>,
       cell: (info) => {
         const formattedDate = new Date(
           info.row.original.submittedTime
@@ -74,7 +74,7 @@ export default function Home() {
         });
 
         return (
-          <span className="text-xs text-stone-500 font-semibold">
+          <span className="text-xs text-stone-500 font-semibold px-3">
             {formattedDate}
           </span>
         );
@@ -89,7 +89,7 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("isAccepted", {
-      header: "State",
+      header: () => <span className="flex justify-center">State</span>,
       cell: (info) => (
         <span className="flex justify-center">
           <StatusIndicator isAccepted={info.row.original.isAccepted} />
@@ -97,7 +97,7 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("chain", {
-      header: "Chain",
+      header: () => <span className="flex justify-center">Chain</span>,
       cell: (info) => (
         <span className="flex justify-center w-20">
           <ChainPill chain={info.row.original.chain} />
