@@ -9,7 +9,7 @@ const Header = () => {
         <span className="text-xl font-bold text-slate-500 -mb-2 tracking-normal">
           the
         </span>
-        <span className="-mb-4">dxDAO</span>
+        <span className="-mb-5">DXdao</span>
         <span>archives</span>
       </h1>
 

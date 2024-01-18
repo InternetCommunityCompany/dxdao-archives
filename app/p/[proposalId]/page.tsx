@@ -1,6 +1,5 @@
+import BackButton from "@/app/_components/BackButton";
 import { getProposalById } from "@/app/_utils/utils";
-import Link from "next/link";
-import { MdKeyboardArrowLeft } from "react-icons/md";
 
 export default function Page({ params }: { params: { proposalId: string } }) {
   const proposalData = getProposalById(params.proposalId);
@@ -9,12 +8,7 @@ export default function Page({ params }: { params: { proposalId: string } }) {
   return (
     <div className="flex flex-col m-auto max-w-2xl mb-20">
       <div className="flex items-start">
-        <Link
-          className="flex py-1 px-3 border-stone-400 text-stone-400 border text-xs font-medium my-7 hover:border-stone-500 hover:bg-stone-100 hover:text-stone-"
-          href="/"
-        >
-          Back
-        </Link>
+        <BackButton />
       </div>
 
       <div className="flex flex-col rounded-lg  p-9 break-words shadow-lg bg-stone-50">

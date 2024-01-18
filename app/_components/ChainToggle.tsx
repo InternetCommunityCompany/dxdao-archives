@@ -4,19 +4,19 @@ import { getProposalData } from "../_utils/utils";
 
 interface ChainToggleProps {
   chain: Chain;
-  setChain: (chain: Chain) => void;
+  setParam: (name: string, value: string | number) => void;
   setData: (proposals: any) => void;
 }
 
 const ToggleButton = ({
   chain,
-  setChain,
+  setParam,
   setData,
   name,
   selected,
 }: {
   chain: Chain;
-  setChain: (chain: Chain) => void;
+  setParam: (name: string, value: string | number) => void;
   setData: (proposals: any) => void;
   name: string;
   selected: boolean;
@@ -28,7 +28,7 @@ const ToggleButton = ({
       }`}
       onClick={() => {
         setData(getProposalData(chain));
-        setChain(chain);
+        setParam("chain", chain);
       }}
     >
       {name}
@@ -36,19 +36,19 @@ const ToggleButton = ({
   );
 };
 
-const ChainToggle = ({ chain, setChain, setData }: ChainToggleProps) => {
+const ChainToggle = ({ chain, setParam, setData }: ChainToggleProps) => {
   return (
     <div className="flex gap-1">
       <ToggleButton
         chain={"gnosis"}
-        setChain={setChain}
+        setParam={setParam}
         setData={setData}
         name="GNO"
         selected={chain === "gnosis"}
       />
       <ToggleButton
         chain={"mainnet"}
-        setChain={setChain}
+        setParam={setParam}
         setData={setData}
         name="ETH"
         selected={chain === "mainnet"}
