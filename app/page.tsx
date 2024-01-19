@@ -183,14 +183,16 @@ export default function Home() {
                             <Filter column={header.column} />
                           </div>
                         ) : null}
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: " ▲",
-                          desc: " ▼",
-                        }[header.column.getIsSorted() as string] ?? null}
+                        <span className="flex">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: " ▲",
+                            desc: " ▼",
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </span>
                       </div>
                     </th>
                   ))}
