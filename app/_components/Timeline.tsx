@@ -10,7 +10,6 @@ interface Element {
   title: string;
   date: string;
   icon?: ReactElement;
-  href?: string;
 }
 
 const elements: Element[] = [
@@ -31,22 +30,16 @@ const elements: Element[] = [
     title: "DAO closed",
     date: "2021-01-01",
     icon: <FaPlaneArrival size={10} />,
-    href: "/close",
   },
 ];
 
-const TimelineElement = ({ title, date, icon, href }: Element) => {
+const TimelineElement = ({ title, date, icon }: Element) => {
   return (
-    <div
-      className={`flex flex-col items-center max-w-20 group ${
-        href && `hover:cursor-pointer`
-      }`}
-      onClick={() => href && window.open(href, "_self")}
-    >
-      <div className="rounded-full h-5 w-5 border border-slate-400 mb-1 flex items-center justify-center text-slate-400 group-hover:h-6 group-hover:w-6 group-hover:border-2 group-hover:border-slate-500 group-hover:text-slate-500 transition-all">
+    <div className="flex flex-col items-center max-w-20 group cursor-pointer">
+      <div className="rounded-full h-5 w-5 border border-stone-400 mb-1 flex items-center justify-center text-stone-400 group-hover:h-6 group-hover:w-6 group-hover:border-2 group-hover:border-stone-500 group-hover:text-stone-500 transition-all">
         {icon}
       </div>
-      <span className="text-center text-slate-500 tracking-tighter leading-3 text-xs group-hover:font-medium">
+      <span className="text-center text-stone-500 tracking-tighter leading-3 text-xs group-hover:font-medium">
         {title}
       </span>
     </div>
@@ -55,7 +48,7 @@ const TimelineElement = ({ title, date, icon, href }: Element) => {
 
 const Timeline = () => {
   return (
-    <div className="flex w-full justify-between mb-4 h-20">
+    <div className="flex w-full justify-around mb-4 h-20">
       {elements.map((element, index) => (
         <div className="flex items-center" key={index}>
           <TimelineElement
@@ -63,10 +56,9 @@ const Timeline = () => {
             title={element.title}
             date={element.date}
             icon={element.icon}
-            href={element.href}
           />
           {index !== elements.length - 1 && (
-            <div className="w-20 h-px rounded bg-gradient-to-r from-transparent to-slate-500 mb-4" />
+            <div className="w-20 h-px rounded bg-gradient-to-r from-transparent to-stone-500 mb-4" />
           )}
         </div>
       ))}

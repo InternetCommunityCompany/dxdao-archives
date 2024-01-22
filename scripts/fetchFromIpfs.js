@@ -85,14 +85,6 @@ const main = async (chain) => {
               "ERROR! We are going to save less proposals than currently fetched"
             );
           }
-
-          const progress = (newNumberOfProposals / ipfsHashes.length) * 100;
-          console.log(`🚀 ~ ${progress.toFixed(0)}%`);
-
-          await fs.promises.writeFile("ipfsData.json", JSON.stringify(result));
-          console.log("------");
-          console.log("Saved!");
-          console.log("------");
         } catch (error) {
           console.error("Error writing file: ", error);
         }
@@ -103,7 +95,11 @@ const main = async (chain) => {
     }
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
+  await fs.promises.writeFile("ipfsData.json", JSON.stringify(result));
+  console.log("------");
+  console.log("Saved!");
+  console.log("------");
+  return;
 };
 
-// checkNumberOfProposals();
-main("mainnet");
+main("gnosis");

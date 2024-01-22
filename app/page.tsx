@@ -27,6 +27,10 @@ import Timeline from "./_components/Timeline";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
+const highlightedProposals = [
+  "0x5b414d3747d95a3a260be19a1b7ebfe0b8c21940e98900a1525d3fd9bfd616d1",
+];
+
 export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
@@ -73,7 +77,7 @@ export default function Home() {
         ),
     }),
     columnHelper.accessor("submittedTime", {
-      header: () => <span className="text-center">Submitted</span>,
+      header: () => <span className="text-center min-w-28">Submitted</span>,
       cell: (info) => {
         const formattedDate = new Date(
           info.row.original.submittedTime
@@ -107,7 +111,7 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("chain", {
-      header: () => <span className="flex justify-center">Chain</span>,
+      header: () => <span>Chain</span>,
       cell: (info) => (
         <span className="flex justify-center w-20">
           <ChainPill chain={info.row.original.chain} />
@@ -162,11 +166,24 @@ export default function Home() {
   }, [searchParams, table, sorting, columnFilters]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center pt-16">
+    <main className="flex min-h-screen flex-col items-center pt-16 max-w-4xl mx-auto">
       <div>
         <Header />
 
         <Timeline />
+
+        <div className="flex gap-5 p-4 justify-center font-serif mb-16 text-jet text-stone-500">
+          <p>
+            After a period of disagreements and splintering opinions inside and
+            outside the DAO, in April 2023 a vote was proposed to dissolve the
+            DAO. After some amendments the vote passed and the DAO was no more.
+          </p>
+          <p>
+            After a period of disagreements and splintering opinions inside and
+            outside the DAO, in April 2023 a vote was proposed to dissolve the
+            DAO. After some amendments the vote passed and the DAO was no more.
+          </p>
+        </div>
 
         <div className="flex flex-col items-center gap-5">
           <table>
@@ -212,7 +229,10 @@ export default function Home() {
                 return (
                   <tr
                     key={row.id}
-                    className="border-b border-stone-400 bg-transparent hover:bg-stone-200"
+                    className={`border-b border-stone-400 bg-transparent hover:bg-stone-200 `}
+                    data-highlighted={highlightedProposals.includes(
+                      row.original.id
+                    )}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="text-stone-800 py-4">

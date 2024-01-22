@@ -20,3 +20,10 @@ body {
   color: rgb(var(--foreground-rgb));
   background-color: #e1d5ca;
 }
+
+[data-highlighted="true"] {
+  background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(45deg, rgba(247, 151, 30, 0.5), rgba(255, 210, 0, 0.5))
+      border-box;
+  border: 20px solid transparent;
+}
