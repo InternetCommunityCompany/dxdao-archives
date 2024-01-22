@@ -13,6 +13,7 @@ interface Proposal {
   proposer: Hex;
   isAccepted: boolean;
   submittedTime: number;
+  creationTx: Hex;
   positiveVotes: string;
   negativeVotes: string;
   votes: {
@@ -52,6 +53,7 @@ export const getProposalData = (): Proposal[] => {
       proposer: proposal.proposer,
       isAccepted,
       submittedTime,
+      creationTx: proposal.creationEvent.tx,
       positiveVotes: proposal.positiveVotes,
       negativeVotes: proposal.negativeVotes,
       votes: [],
@@ -116,4 +118,37 @@ export const getVoteDistributionString = (
   let negativeVotesPercentage = BigInt(100) - positiveVotesPercentage;
 
   return `${positiveVotesPercentage.toString()}% | ${negativeVotesPercentage.toString()}%`;
+};
+
+export const getBlockExplorerUrl = (tx: string, chain: Chain) => {
+  const etherscanUrl = "https://etherscan.io/tx/";
+  const gnosisUrl = "https://gnosisscan.io/tx/";
+
+  if (chain === "gnosis") return gnosisUrl + tx;
+  else return etherscanUrl + tx;
+};
+
+export const getExecutionTx = (proposalId: string) => {
+  const gnosisData = gnosisProposals as ProposalSystem;
+  const mainnetData = mainnetProposals as ProposalSystem;
+
+  const votingMachines = {
+    ...gnosisData.votingMachines,
+    ...mainnetData.votingMachines,
+  };
+  const votingMachineAddresses = Object.keys(votingMachines) as Hex[];
+
+  for (const votingMachineAddress of votingMachineAddresses) {
+    const votingMachine = votingMachines[votingMachineAddress];
+    const stateChanges = votingMachine.events.proposalStateChanges;
+
+    const foundTx = stateChanges.find((stateChange) => {
+      const isExecution = stateChange.state === "5";
+      const isProposal = stateChange.proposalId === proposalId;
+      return isExecution && isProposal;
+    });
+
+    if (foundTx) return foundTx.tx;
+  }
+  return undefined;
 };

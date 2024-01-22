@@ -133,7 +133,7 @@ interface NewProposalEvent {
 interface VotingMachine {
   events: {
     newProposal: VotingMachineNewProposalEvent[];
-    // proposalStateChanges: VotingMachineNewProposalEvent[];
+    proposalStateChanges: VotingMachineStateChangeEvent[];
     // redeems: VotingMachineNewProposalEvent[];
     // redeemsDaoBounty: VotingMachineNewProposalEvent[];
     // redeemsRep: VotingMachineNewProposalEvent[];
@@ -168,6 +168,11 @@ interface VotingMachineBaseEvent {
 export interface VotingMachineNewProposalEvent extends VotingMachineBaseEvent {
   paramHash: Hex;
   proposer: Hex;
+  timestamp: number;
+}
+
+export interface VotingMachineStateChangeEvent extends VotingMachineBaseEvent {
+  state: string;
   timestamp: number;
 }
 
