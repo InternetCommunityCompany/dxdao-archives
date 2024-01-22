@@ -58,14 +58,19 @@ export default function Home() {
   const columns = [
     columnHelper.accessor("title", {
       header: "Proposal title",
-      cell: (info) => (
-        <Link
-          className="font-medium tracking-tighter text-stone-800 text-base"
-          href={`/p/${info.row.original.id}`}
-        >
-          {info.getValue()}
-        </Link>
-      ),
+      cell: (info) =>
+        info.getValue() ? (
+          <Link
+            className="font-medium tracking-tighter text-stone-800 text-base"
+            href={info.getValue() ? `/p/${info.row.original.id}` : ``}
+          >
+            {info.getValue()}
+          </Link>
+        ) : (
+          <span className="text-stone-700 italic font-light">
+            no data available
+          </span>
+        ),
     }),
     columnHelper.accessor("submittedTime", {
       header: () => <span className="text-center">Submitted</span>,
