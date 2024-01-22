@@ -1,11 +1,16 @@
 import React, { ReactElement } from "react";
-import { IconType } from "react-icons";
-import { FaRocket, FaChartLine, FaCoins, FaCross } from "react-icons/fa6";
+import {
+  FaRocket,
+  FaChartLine,
+  FaCoins,
+  FaPlaneArrival,
+} from "react-icons/fa6";
 
 interface Element {
   title: string;
   date: string;
   icon?: ReactElement;
+  href?: string;
 }
 
 const elements: Element[] = [
@@ -22,12 +27,22 @@ const elements: Element[] = [
     icon: <FaCoins size={10} />,
   },
   { title: "DAVI launched", date: "2021-01-01", icon: <FaRocket size={10} /> },
-  { title: "DAO closed", date: "2021-01-01", icon: <FaCross size={8} /> },
+  {
+    title: "DAO closed",
+    date: "2021-01-01",
+    icon: <FaPlaneArrival size={10} />,
+    href: "/close",
+  },
 ];
 
-const TimelineElement = ({ title, date, icon }: Element) => {
+const TimelineElement = ({ title, date, icon, href }: Element) => {
   return (
-    <div className="flex flex-col items-center max-w-20 hover:cursor-pointer group">
+    <div
+      className={`flex flex-col items-center max-w-20 group ${
+        href && `hover:cursor-pointer`
+      }`}
+      onClick={() => href && window.open(href, "_self")}
+    >
       <div className="rounded-full h-5 w-5 border border-slate-400 mb-1 flex items-center justify-center text-slate-400 group-hover:h-6 group-hover:w-6 group-hover:border-2 group-hover:border-slate-500 group-hover:text-slate-500 transition-all">
         {icon}
       </div>
@@ -48,6 +63,7 @@ const Timeline = () => {
             title={element.title}
             date={element.date}
             icon={element.icon}
+            href={element.href}
           />
           {index !== elements.length - 1 && (
             <div className="w-20 h-px rounded bg-gradient-to-r from-transparent to-slate-500 mb-4" />
