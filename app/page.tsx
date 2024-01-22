@@ -23,6 +23,7 @@ import StatusIndicator from "./_components/StatusIndicator";
 import Header from "./_components/Header";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ChainPill from "./_components/ChainPill";
+import Timeline from "./_components/Timeline";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
@@ -160,8 +161,10 @@ export default function Home() {
       <div>
         <Header />
 
+        <Timeline />
+
         <div className="flex flex-col items-center gap-5">
-          <table className="">
+          <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
@@ -219,7 +222,6 @@ export default function Home() {
               })}
             </tbody>
           </table>
-
           <div className="my-6 flex w-full">
             <Pagination table={table} setParam={setParam} />
           </div>
