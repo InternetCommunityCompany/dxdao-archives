@@ -157,8 +157,7 @@ interface VotingMachineBaseEvent {
     | "Redeem"
     | "RedeemDaoBounty"
     | "RedeemReputation"
-    | "Stake"
-    | "VoteProposal";
+    | "Stake";
   logIndex: number;
   proposalId: Hex;
   signature: Hex;

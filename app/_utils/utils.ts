@@ -13,6 +13,8 @@ interface Proposal {
   proposer: Hex;
   isAccepted: boolean;
   submittedTime: number;
+  positiveVotes: string;
+  negativeVotes: string;
   votes: {
     amount: string;
     vote: string;
@@ -50,6 +52,8 @@ export const getProposalData = (): Proposal[] => {
       proposer: proposal.proposer,
       isAccepted,
       submittedTime,
+      positiveVotes: proposal.positiveVotes,
+      negativeVotes: proposal.negativeVotes,
       votes: [],
     });
   });
@@ -77,10 +81,7 @@ export const getProposalData = (): Proposal[] => {
   return proposals;
 };
 
-export const getProposalById = (
-  id: Hex | string,
-  chain: Chain = "gnosis"
-): Proposal | undefined => {
+export const getProposalById = (id: Hex | string): Proposal | undefined => {
   let proposals = getProposalData();
   let proposal = proposals.find((proposal) => proposal.id === id);
   return proposal;
@@ -96,4 +97,23 @@ export const shortenAddress = (address: string): string => {
   const start = address.slice(0, 6);
   const end = address.slice(-4);
   return `${start}...${end}`;
+};
+
+export const getVoteDistributionString = (
+  positiveVotes: string,
+  negativeVotes: string
+): string => {
+  const positiveVotesNumber = BigInt(positiveVotes);
+  const negativeVotesNumber = BigInt(negativeVotes);
+
+  const totalVotes = positiveVotesNumber + negativeVotesNumber;
+
+  let positiveVotesPercentage =
+    totalVotes > 0
+      ? (positiveVotesNumber * BigInt(100)) / totalVotes
+      : BigInt(0);
+
+  let negativeVotesPercentage = BigInt(100) - positiveVotesPercentage;
+
+  return `${positiveVotesPercentage.toString()}% | ${negativeVotesPercentage.toString()}%`;
 };

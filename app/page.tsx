@@ -13,9 +13,15 @@ import {
   flexRender,
   createColumnHelper,
   SortingState,
+  RowPinningState,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { fuzzyFilter, getProposalData, shortenAddress } from "./_utils/utils";
+import {
+  fuzzyFilter,
+  getProposalData,
+  getVoteDistributionString,
+  shortenAddress,
+} from "./_utils/utils";
 import { Filter } from "./_components/Filter";
 import Link from "next/link";
 import Pagination from "./_components/Pagination";
@@ -107,6 +113,18 @@ export default function Home() {
       cell: (info) => (
         <span className="flex justify-center">
           <StatusIndicator isAccepted={info.row.original.isAccepted} />
+        </span>
+      ),
+    }),
+    columnHelper.display({
+      id: "parsedVotes",
+      header: () => <span>Votes</span>,
+      cell: (info) => (
+        <span className="flex text-xs min-w-24 text-stone-500 font-medium">
+          {getVoteDistributionString(
+            info.row.original.positiveVotes,
+            info.row.original.negativeVotes
+          )}
         </span>
       ),
     }),
