@@ -222,13 +222,13 @@ export default function Home() {
         <div className="flex gap-5 p-4 justify-center font-serif mb-16 text-jet text-stone-500">
           <div className="w-1/2">
             <p>
-              DXdao was a truly decentralized collective. It was born from
-              Gnosis and daostack as an experiment in decentralization. It used
-              holographic consensus and non transferable reputation tokens for
-              governance voting.
-              <br /> It built multiple bleeding edge products and took
-              decentralization seriously - hosting products on eth.limo when
-              others were taking shortcuts.
+              DXdao was a beacon of decentralization, born from the
+              collaboration of Gnosis and DAOstack. It pioneered the use of
+              holographic consensus and non-transferable reputation tokens in
+              governance. <br /> Beyond theory, DXdao developed bleeding edge
+              products and upheld true decentralization, notably hosting with
+              ENS & IPFS, distinguishing itself in a landscape of DAOs in name
+              only.
             </p>
           </div>
           <div className="w-1/2">
