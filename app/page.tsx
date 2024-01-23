@@ -220,16 +220,49 @@ export default function Home() {
         <Timeline />
 
         <div className="flex gap-5 p-4 justify-center font-serif mb-16 text-jet text-stone-500">
-          <p>
-            After a period of disagreements and splintering opinions inside and
-            outside the DAO, in April 2023 a vote was proposed to dissolve the
-            DAO. After some amendments the vote passed and the DAO was no more.
-          </p>
-          <p>
-            After a period of disagreements and splintering opinions inside and
-            outside the DAO, in April 2023 a vote was proposed to dissolve the
-            DAO. After some amendments the vote passed and the DAO was no more.
-          </p>
+          <div className="w-1/2">
+            <p>
+              DXdao was a truly decentralized collective. It was born from
+              Gnosis and daostack as an experiment in decentralization. It used
+              holographic consensus and reputation (soulbound tokens) for
+              governance voting.
+              <br /> It built multiple bleeding edge products and took
+              decentralization seriously - hosting products on eth.limo when
+              others were taking shortcuts
+            </p>
+          </div>
+          <div className="w-1/2">
+            <p>
+              After a period of disagreements and splintering opinions inside
+              and outside the DAO, in April 2023 a vote was passed to dissolve
+              the DAO. Most funds went back to investors and the remaining
+              amount was split between the projects. You can follow these
+              projects below:
+            </p>
+            <a
+              href="https://twitter.com/Swapr_dapp"
+              target="_blank"
+              className="underline font-bold"
+            >
+              Swapr
+            </a>
+            <br />
+            <a
+              href="https://twitter.com/CarrotEth"
+              target="_blank"
+              className="underline font-bold"
+            >
+              Carrot
+            </a>
+            <br />
+            <a
+              href="https://internetcommunity.co"
+              target="_blank"
+              className="underline font-bold"
+            >
+              The Internet Communtity Company (previously DXgov)
+            </a>
+          </div>
         </div>
 
         <div className="flex flex-col items-center gap-5">

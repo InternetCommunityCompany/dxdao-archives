@@ -14,20 +14,48 @@ interface Element {
 
 const elements: Element[] = [
   {
-    title: "Bonding curve live",
+    title: "Bonding curve live 5/2020",
     date: "2021-01-01",
-    icon: <FaChartLine size={8} />,
+    icon: <FaChartLine size={10} />,
   },
-  { title: "Omen launched", date: "2021-01-01", icon: <FaRocket size={10} /> },
-  { title: "Swapr launched", date: "2021-01-01", icon: <FaRocket size={10} /> },
   {
-    title: "Treasury peak $50m 2022",
+    title: "Omen launched 7/2020",
+    date: "2021-01-01",
+    icon: <FaRocket size={10} />,
+  },
+  {
+    title: "Swapr launch 12/2020",
+    date: "2021-01-01",
+    icon: <FaRocket size={10} />,
+  },
+
+  {
+    title: "Bonding curve paused 9/2021",
+    date: "2021-01-01",
+    icon: <FaChartLine size={10} />,
+  },
+  {
+    title: "Carrot launch 11/2021",
+    date: "2021-01-01",
+    icon: <FaRocket size={10} />,
+  },
+  {
+    title: "Treasury peak >$95m",
     date: "2021-01-01",
     icon: <FaCoins size={10} />,
   },
-  { title: "DAVI launched", date: "2021-01-01", icon: <FaRocket size={10} /> },
   {
-    title: "DAO closed",
+    title: "Project-DAVI launch 10/2022",
+    date: "2021-01-01",
+    icon: <FaRocket size={10} />,
+  },
+  {
+    title: "Infinite Hackathon 10/2022",
+    date: "2021-01-01",
+    icon: <FaRocket size={10} />,
+  },
+  {
+    title: "DAO closed 4/2023",
     date: "2021-01-01",
     icon: <FaPlaneArrival size={10} />,
   },
