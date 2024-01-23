@@ -1,17 +1,11 @@
 import BackButton from "@/app/_components/BackButton";
-import {
-  getBlockExplorerUrl,
-  getExecutionTx,
-  getProposalById,
-} from "@/app/_utils/utils";
+import { getBlockExplorerUrl, getProposalById } from "@/app/_utils/utils";
 import Link from "next/link";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 export default function Page({ params }: { params: { proposalId: string } }) {
   const proposalData = getProposalById(params.proposalId);
   if (!proposalData) return <div>Proposal not found</div>;
-
-  const executionTx = getExecutionTx(params.proposalId);
 
   return (
     <div className="flex flex-col m-auto max-w-2xl mb-20">
@@ -42,19 +36,12 @@ export default function Page({ params }: { params: { proposalId: string } }) {
               proposalData.creationTx,
               proposalData.chain
             )}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Creation transaction{" "}
             <FaExternalLinkAlt className="inline" size={12} />
           </Link>
-          {executionTx && (
-            <Link
-              className="underline text-blue-800"
-              href={getBlockExplorerUrl(executionTx, proposalData.chain)}
-            >
-              Execution transaction{" "}
-              <FaExternalLinkAlt className="inline" size={12} />
-            </Link>
-          )}
         </div>
       </div>
     </div>

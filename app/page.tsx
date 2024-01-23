@@ -14,6 +14,7 @@ import {
   createColumnHelper,
   SortingState,
   RowPinningState,
+  Row,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -37,6 +38,26 @@ const highlightedProposals = [
   "0x5b414d3747d95a3a260be19a1b7ebfe0b8c21940e98900a1525d3fd9bfd616d1",
 ];
 
+interface TableRowProps {
+  row: Row<Proposal>;
+}
+
+const TableRow = ({ row }: TableRowProps) => {
+  return (
+    <tr
+      key={row.id}
+      className={`border-b border-stone-400 bg-transparent hover:bg-stone-200 `}
+      data-highlighted={highlightedProposals.includes(row.original.id)}
+    >
+      {row.getVisibleCells().map((cell) => (
+        <td key={cell.id} className="text-stone-800 py-4">
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </td>
+      ))}
+    </tr>
+  );
+};
+
 export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,6 +73,10 @@ export default function Home() {
   );
 
   const data = useMemo(() => getProposalData(), []);
+
+  const [rowPinning, setRowPinning] = useState<RowPinningState>();
+
+  console.log(rowPinning);
 
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortParam = searchParams.get("sort");
@@ -148,22 +173,30 @@ export default function Home() {
       },
       sorting,
       columnFilters,
+      rowPinning: {
+        top: ["1896"],
+        bottom: [],
+      },
     },
     filterFns: {
       fuzzy: fuzzyFilter,
     },
+
     // Core
     getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
     // Sorting
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     // Filtering
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    //Pagination
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    // Pinning
+    keepPinnedRows: true,
   });
 
   useEffect(
@@ -243,26 +276,14 @@ export default function Home() {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map((row) => {
-                return (
-                  <tr
-                    key={row.id}
-                    className={`border-b border-stone-400 bg-transparent hover:bg-stone-200 `}
-                    data-highlighted={highlightedProposals.includes(
-                      row.original.id
-                    )}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="text-stone-800 py-4">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
+              {/* Pinned rows */}
+              {table.getTopRows().map((row) => (
+                <TableRow key={row.id} row={row} />
+              ))}
+              {/* Rest of the rows */}
+              {table.getCenterRows().map((row) => (
+                <TableRow key={row.id} row={row} />
+              ))}
             </tbody>
           </table>
           <div className="my-6 flex w-full">
