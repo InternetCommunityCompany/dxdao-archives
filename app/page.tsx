@@ -224,11 +224,11 @@ export default function Home() {
             <p>
               DXdao was a truly decentralized collective. It was born from
               Gnosis and daostack as an experiment in decentralization. It used
-              holographic consensus and reputation (soulbound tokens) for
+              holographic consensus and non transferable reputation tokens for
               governance voting.
               <br /> It built multiple bleeding edge products and took
               decentralization seriously - hosting products on eth.limo when
-              others were taking shortcuts
+              others were taking shortcuts.
             </p>
           </div>
           <div className="w-1/2">
@@ -236,13 +236,14 @@ export default function Home() {
               After a period of disagreements and splintering opinions inside
               and outside the DAO, in April 2023 a vote was passed to dissolve
               the DAO. Most funds went back to investors and the remaining
-              amount was split between the projects. You can follow these
-              projects below:
+              amount was split between the projects.
+              <br />
+              You can follow these projects below:
             </p>
             <a
               href="https://twitter.com/Swapr_dapp"
               target="_blank"
-              className="underline font-bold"
+              className="underline font-bold mt-10"
             >
               Swapr
             </a>
@@ -250,7 +251,7 @@ export default function Home() {
             <a
               href="https://twitter.com/CarrotEth"
               target="_blank"
-              className="underline font-bold"
+              className="underline font-bold mt-10"
             >
               Carrot
             </a>
@@ -258,7 +259,7 @@ export default function Home() {
             <a
               href="https://internetcommunity.co"
               target="_blank"
-              className="underline font-bold"
+              className="underline font-bold mt-10"
             >
               The Internet Communtity Company (previously DXgov)
             </a>
@@ -320,6 +321,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <p className="p-4 justify-center font-serif mt-8 text-jet text-stone-500">
+        This archive was put together to the best of the ability of The Internet
+        Community Company.
+        <br /> Information in this archive is provided as is for historical
+        reference and may not be accurate or complete.{" "}
+      </p>
     </main>
   );
 }

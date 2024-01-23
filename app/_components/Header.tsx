@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <>
       <Link href="/">
-        <h1 className="font-serif flex flex-col text-6xl text-center text-slate-600 whitespace-pre items-center font-extralight tracking-tighter mb-4">
+        <h1 className="font-serif flex flex-col text-6xl text-center text-slate-600 whitespace-pre items-center font-extralight tracking-tighter mb-4 leading-tight">
           <span className="text-xl font-bold text-slate-500 -mb-2 tracking-normal">
             the
           </span>
