@@ -35,7 +35,7 @@ const elements: Element[] = [
     icon: <FaChartLine size={10} />,
   },
   {
-    title: "Carrot launch 11/2021",
+    title: "Carrot MVP 11/2021",
     date: "2021-01-01",
     icon: <FaRocket size={10} />,
   },
