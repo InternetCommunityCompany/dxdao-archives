@@ -74,10 +74,6 @@ export default function Home() {
 
   const data = useMemo(() => getProposalData(), []);
 
-  const [rowPinning, setRowPinning] = useState<RowPinningState>();
-
-  console.log(rowPinning);
-
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortParam = searchParams.get("sort");
     return sortParam

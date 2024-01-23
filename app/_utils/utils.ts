@@ -140,12 +140,11 @@ export const getExecutionTx = (proposalId: string) => {
 
   for (const votingMachineAddress of votingMachineAddresses) {
     const votingMachine = votingMachines[votingMachineAddress];
-    const stateChanges = votingMachine.events.proposalStateChanges;
+    const stateChanges = votingMachine.events.redeemsRep;
 
     const foundTx = stateChanges.find((stateChange) => {
-      const isExecution = stateChange.state === "5";
       const isProposal = stateChange.proposalId === proposalId;
-      return isExecution && isProposal;
+      return isProposal;
     });
 
     if (foundTx) return foundTx.tx;
