@@ -13,7 +13,6 @@ import {
   flexRender,
   createColumnHelper,
   SortingState,
-  RowPinningState,
   Row,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -27,10 +26,10 @@ import { Filter } from "./_components/Filter";
 import Link from "next/link";
 import Pagination from "./_components/Pagination";
 import StatusIndicator from "./_components/StatusIndicator";
-import Header from "./_components/Header";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ChainPill from "./_components/ChainPill";
 import Timeline from "./_components/Timeline";
+import Summary from "./_components/Summary";
 
 type Proposal = ReturnType<typeof getProposalData>[0];
 
@@ -50,8 +49,22 @@ const TableRow = ({ row }: TableRowProps) => {
       data-highlighted={highlightedProposals.includes(row.original.id)}
     >
       {row.getVisibleCells().map((cell) => (
-        <td key={cell.id} className="text-stone-800 py-4">
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        <td
+          key={cell.id}
+          className="text-stone-800 py-4"
+          style={{
+            width: cell.column.id === "title" ? "auto" : cell.column.getSize(),
+          }}
+        >
+          <div
+            className={
+              cell.column.id !== "title"
+                ? "flex justify-center text-center"
+                : undefined
+            }
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </div>
         </td>
       ))}
     </tr>
@@ -89,22 +102,25 @@ export default function Home() {
   const columns = [
     columnHelper.accessor("title", {
       header: "Proposal title",
-      cell: (info) =>
-        info.getValue() ? (
+      cell: (info) => {
+        const value = info.getValue();
+        return value ? (
           <Link
             className="font-medium tracking-tighter text-stone-800 text-base"
-            href={info.getValue() ? `/p/${info.row.original.id}` : ``}
+            href={`/p/${info.row.original.id}`}
           >
-            {info.getValue()}
+            {value}
           </Link>
         ) : (
           <span className="text-stone-700 italic font-light">
             no data available
           </span>
-        ),
+        );
+      },
     }),
     columnHelper.accessor("submittedTime", {
-      header: () => <span className="text-center min-w-28">Submitted</span>,
+      header: "Submitted",
+      size: 120,
       cell: (info) => {
         const formattedDate = new Date(
           info.row.original.submittedTime
@@ -115,7 +131,7 @@ export default function Home() {
         });
 
         return (
-          <span className="text-xs text-stone-500 font-semibold px-3 text-right">
+          <span className="text-xs text-stone-500 font-semibold text-right">
             {formattedDate}
           </span>
         );
@@ -123,6 +139,7 @@ export default function Home() {
     }),
     columnHelper.accessor("proposer", {
       header: "From",
+      size: 120,
       cell: (info) => (
         <span className="text-xs font-mono text-stone-500 font-semibold">
           {shortenAddress(info.getValue())}
@@ -130,7 +147,8 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("isAccepted", {
-      header: () => <span className="flex justify-center">State</span>,
+      header: "State",
+      size: 80,
       cell: (info) => (
         <span className="flex justify-center">
           <StatusIndicator isAccepted={info.row.original.isAccepted} />
@@ -139,9 +157,10 @@ export default function Home() {
     }),
     columnHelper.display({
       id: "parsedVotes",
-      header: () => <span>Votes</span>,
+      header: "Votes",
+      size: 100,
       cell: (info) => (
-        <span className="flex text-xs min-w-24 text-stone-500 font-medium">
+        <span className="text-xs min-w-24 text-stone-500 font-medium">
           {getVoteDistributionString(
             info.row.original.positiveVotes,
             info.row.original.negativeVotes
@@ -150,7 +169,8 @@ export default function Home() {
       ),
     }),
     columnHelper.accessor("chain", {
-      header: () => <span>Chain</span>,
+      header: "Chain",
+      size: 80,
       cell: (info) => (
         <span className="flex justify-center w-20">
           <ChainPill chain={info.row.original.chain} />
@@ -213,127 +233,78 @@ export default function Home() {
   }, [searchParams, table, sorting, columnFilters]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center pt-16 max-w-4xl mx-auto">
-      <div>
-        <Header />
+    <div>
+      <Timeline />
+      <Summary />
 
-        <Timeline />
-
-        <div className="flex gap-5 p-4 justify-center font-serif mb-16 text-jet text-stone-500">
-          <div className="w-1/2">
-            <p>
-              DXdao was a beacon of decentralization, born from the
-              collaboration of Gnosis and DAOstack. It pioneered the use of
-              holographic consensus and non-transferable reputation tokens in
-              governance. <br /> Beyond theory, DXdao developed bleeding edge
-              products and upheld true decentralization, notably hosting with
-              ENS & IPFS, distinguishing itself in a landscape of DAOs in name
-              only.
-            </p>
-          </div>
-          <div className="w-1/2">
-            <p>
-              After a period of disagreements and splintering opinions inside
-              and outside the DAO, in April 2023 a vote was passed to dissolve
-              the DAO. Most funds went back to investors and the remaining
-              amount was split between the projects.
-              <br />
-              You can follow these projects below:
-            </p>
-            <a
-              href="https://twitter.com/Swapr_dapp"
-              target="_blank"
-              className="underline font-bold mt-10"
-            >
-              Swapr
-            </a>
-            <br />
-            <a
-              href="https://twitter.com/CarrotEth"
-              target="_blank"
-              className="underline font-bold mt-10"
-            >
-              Carrot
-            </a>
-            <br />
-            <a
-              href="https://internetcommunity.co"
-              target="_blank"
-              className="underline font-bold mt-10"
-            >
-              The Internet Community Company (previously DXgov)
-            </a>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-5">
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  key={headerGroup.id}
-                  className="align-bottom text-left text-stone-500 bg-stone-200 text-sm"
-                >
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : "",
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
+      <div className="flex flex-col items-center gap-5 w-full">
+        <table className="w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr
+                key={headerGroup.id}
+                className="align-bottom text-left text-stone-500 bg-stone-200 text-sm"
+              >
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    style={{
+                      width:
+                        header.column.id === "title"
+                          ? "auto"
+                          : header.getSize(),
+                    }}
+                  >
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {header.column.getCanFilter() ? (
+                        <div className="mb-4">
+                          <Filter column={header.column} />
+                        </div>
+                      ) : null}
+                      <span
+                        className={`flex p-1 ${
+                          header.column.id === "title"
+                            ? "justify-start"
+                            : "justify-center"
+                        }`}
                       >
-                        {header.column.getCanFilter() ? (
-                          <div className="mb-4">
-                            <Filter column={header.column} />
-                          </div>
-                        ) : null}
-                        <span className="flex">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: " ▲",
-                            desc: " ▼",
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </span>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {/* Pinned rows */}
-              {table.getTopRows().map((row) => (
-                <TableRow key={row.id} row={row} />
-              ))}
-              {/* Rest of the rows */}
-              {table.getCenterRows().map((row) => (
-                <TableRow key={row.id} row={row} />
-              ))}
-            </tbody>
-          </table>
-          <div className="my-6 flex w-full">
-            <Pagination table={table} setParam={setParam} />
-          </div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " ▲",
+                          desc: " ▼",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {/* Pinned rows */}
+            {table.getTopRows().map((row) => (
+              <TableRow key={row.id} row={row} />
+            ))}
+            {/* Rest of the rows */}
+            {table.getCenterRows().map((row) => (
+              <TableRow key={row.id} row={row} />
+            ))}
+          </tbody>
+        </table>
+        <div className="my-6 flex w-full">
+          <Pagination table={table} setParam={setParam} />
         </div>
       </div>
-      <p className="p-4 justify-center font-serif mt-8 text-jet text-stone-500">
-        This archive was put together to the best of the ability of The Internet
-        Community Company.
-        <br /> Information in this archive is provided as is for historical
-        reference and may not be accurate or complete. <br />
-        <a
-          href="https://medium.com/@ticc/a-catch-up-for-dxdao-members-on-ticc-302707366262"
-          target="_blank"
-          className="underline font-bold mt-10"
-        >
-          What is TICC?
-        </a>
-      </p>
-    </main>
+    </div>
   );
 }
