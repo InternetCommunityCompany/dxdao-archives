@@ -261,7 +261,7 @@ export default function Home() {
               target="_blank"
               className="underline font-bold mt-10"
             >
-              The Internet Communtity Company (previously DXgov)
+              The Internet Community Company (previously DXgov)
             </a>
           </div>
         </div>
