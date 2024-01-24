@@ -36,6 +36,7 @@ type Proposal = ReturnType<typeof getProposalData>[0];
 const highlightedProposals = [
   "0x5b414d3747d95a3a260be19a1b7ebfe0b8c21940e98900a1525d3fd9bfd616d1",
 ];
+const leftAlignedColumn = "title";
 
 interface TableRowProps {
   row: Row<Proposal>;
@@ -53,12 +54,12 @@ const TableRow = ({ row }: TableRowProps) => {
           key={cell.id}
           className="text-stone-800 py-4"
           style={{
-            width: cell.column.id === "title" ? "auto" : cell.column.getSize(),
+            width: cell.column.id === leftAlignedColumn ? "auto" : cell.column.getSize(),
           }}
         >
           <div
             className={
-              cell.column.id !== "title"
+              cell.column.id !== leftAlignedColumn
                 ? "flex justify-center text-center"
                 : undefined
             }
@@ -250,7 +251,7 @@ export default function Home() {
                     key={header.id}
                     style={{
                       width:
-                        header.column.id === "title"
+                        header.column.id === leftAlignedColumn
                           ? "auto"
                           : header.getSize(),
                     }}
@@ -270,7 +271,7 @@ export default function Home() {
                       ) : null}
                       <span
                         className={`flex p-1 ${
-                          header.column.id === "title"
+                          header.column.id === leftAlignedColumn
                             ? "justify-start"
                             : "justify-center"
                         }`}
