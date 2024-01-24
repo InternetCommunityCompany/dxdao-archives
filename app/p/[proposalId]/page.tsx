@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { proposalId: string } }) {
         <BackButton />
       </div>
 
-      <div className="flex flex-col rounded-lg  p-9 break-words shadow-lg bg-stone-50">
+      <div className="flex flex-col rounded-lg p-9 break-words shadow-lg bg-stone-50">
         <h1 className="text-3xl font-light text-stone-500 pb-3">
           {proposalData.title}
         </h1>

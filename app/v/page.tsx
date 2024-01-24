@@ -75,7 +75,7 @@ export default function Videos() {
         ))}
       </div>
 
-      <div className="flex flex-row justify-center mb-8">
+      <div className="flex flex-row justify-center mt-8">
         {createPaginationArray(pageCount)?.map((page) => (
           <span
             onClick={() => setActivePage(page)}
