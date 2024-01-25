@@ -30,7 +30,7 @@ export const getThread = (threadId: string) => {
 };
 
 export const getThreadPosts = (threadId: string) => {
-  const postsMap = postsDataFile as Record<string, ForumPostData[]>;
+  const postsMap = postsDataFile as unknown as Record<string, ForumPostData[]>;
   const postsData = postsMap[threadId];
 
   if (!postsData) return null;
