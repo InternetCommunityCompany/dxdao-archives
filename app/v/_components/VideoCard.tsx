@@ -12,13 +12,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, date, image, link, tags })
   return (
     <Link href={link}>
       <div className="flex flex-col items-center gap-5">
-        <div className="relative max-w-sm border border-stone-400 rounded-xs shadow">
+        <div className="relative max-w-sm border border-stone-400 rounded-md overflow-hidden shadow">
 
           <div className="absolute top-2 left-0">
           {tags?.map(tag => (<span className="bg-stone-500 py-2 px-4 text-xs" key={tag}>{tag}</span>))}
           </div>
 
-          <img className="rounded-t-lg w-full" src={image} alt={title} />
+          <img className="w-full" src={image} alt={title} />
 
           <div className="p-5">
             <h5 className="mb-2 text-lg font-bold tracking-tight text-stone-700 font-serif">
