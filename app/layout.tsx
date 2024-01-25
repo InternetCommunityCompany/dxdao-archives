@@ -8,7 +8,7 @@ import Navigation from "./_components/Navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DXdao archives",
+  title: "DXdao archive",
   description:
     "An archive of DXdao's proposals, forum and videos - by The Internet Community Company",
 };

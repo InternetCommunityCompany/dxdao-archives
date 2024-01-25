@@ -12,7 +12,7 @@ const Header = () => {
             the
           </span>
           <span className="-mb-5">DXdao</span>
-          <span>archives</span>
+          <span>archive</span>
         </h1>
       </Link>
 
