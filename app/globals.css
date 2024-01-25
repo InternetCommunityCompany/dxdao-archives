@@ -27,3 +27,7 @@ body {
       border-box;
   border: 20px solid transparent;
 }
+
+* {
+  min-width: 0;
+}

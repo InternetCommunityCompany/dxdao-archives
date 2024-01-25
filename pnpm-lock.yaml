@@ -11,6 +11,12 @@ dependencies:
   '@tanstack/react-table':
     specifier: ^8.11.6
     version: 8.11.6(react-dom@18.2.0)(react@18.2.0)
+  interweave:
+    specifier: ^13.1.0
+    version: 13.1.0(react@18.2.0)
+  interweave-autolink:
+    specifier: ^5.1.1
+    version: 5.1.1(interweave@13.1.0)(react@18.2.0)
   next:
     specifier: 14.0.4
     version: 14.0.4(react-dom@18.2.0)(react@18.2.0)
@@ -948,6 +954,10 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /escape-html@1.0.3:
+    resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+    dev: false
+
   /escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
@@ -1530,6 +1540,25 @@ packages:
       hasown: 2.0.0
       side-channel: 1.0.4
     dev: true
+
+  /interweave-autolink@5.1.1(interweave@13.1.0)(react@18.2.0):
+    resolution: {integrity: sha512-IbIFle1DvHZYL6GLtUFWRT6BDFXnNHF106Bkkdx8J4SjjkLrftCHGVStcYRh7jEdD9uS6MeF55Oy+FvvBg12Sg==}
+    peerDependencies:
+      interweave: ^13.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      interweave: 13.1.0(react@18.2.0)
+      react: 18.2.0
+    dev: false
+
+  /interweave@13.1.0(react@18.2.0):
+    resolution: {integrity: sha512-JIDq0+2NYg0cgL7AB26fBcV0yZdiJvPDBp+aF6k8gq6Cr1kH5Gd2/Xqn7j8z+TGb8jCWZn739jzalCz+nPYwcA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      escape-html: 1.0.3
+      react: 18.2.0
+    dev: false
 
   /is-array-buffer@3.0.2:
     resolution: {integrity: sha512-y+FyyR/w8vfIRq4eQcM1EYgSTnmHXPqaF+IgzgraytCFq5Xh8lllDVmAZolPJiZttZLeFSINPYMaEJ7/vWUa1w==}
