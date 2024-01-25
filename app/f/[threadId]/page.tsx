@@ -3,6 +3,7 @@
 import BackButton from "@/app/_components/BackButton";
 import { Interweave } from "interweave";
 import { getThread, getThreadPosts } from "../_utils/utils";
+import { FaHeart, FaEye } from "react-icons/fa6";
 
 function transform(
   node: HTMLElement,
@@ -69,9 +70,12 @@ export default function Page({ params }: { params: { threadId: string } }) {
                 : `@${post.username}`}
             </h2>
 
-            <h4 className="text-zinc-400 text-medium text-sm">
+            <div className="text-zinc-400 text-medium text-sm flex items-center gap-4">
               {formattedDate}
-            </h4>
+              <span className="gap-1 flex items-center">
+                <FaEye className="fill-stone-400" size={16} /> {post.reads}
+              </span>
+            </div>
 
             <Interweave
               content={post.cooked}
@@ -81,6 +85,11 @@ export default function Page({ params }: { params: { threadId: string } }) {
               className="text-stone-700 tracking-tight mt-4"
               transform={transform}
             />
+
+            <div className="flex flex-row items-center justify-end mt-4 gap-2 text-stone-700">
+              <FaHeart className="fill-stone-400" size={16} /> {post.likesCount}{" "}
+              {post.likesCount === 1 ? "Like" : "Likes"}
+            </div>
           </div>
         );
       })}

@@ -31,7 +31,7 @@ interface ForumPostData {
   yours: false;
 
   raw: string;
-  actions_summary: [];
+  actions_summary: { id: number; count: number }[];
 }
 
 interface ForumPost {
@@ -47,5 +47,5 @@ interface ForumPost {
   updatedAt: Date;
   reads: number;
   readersCount: number;
-  actionsSummary: [];
+  likesCount: number;
 }

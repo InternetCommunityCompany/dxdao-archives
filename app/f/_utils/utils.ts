@@ -38,6 +38,10 @@ export const getThreadPosts = (threadId: string) => {
   const posts = postsData.map((postData) => {
     const createdAt = new Date(postData.created_at);
     const updatedAt = new Date(postData.updated_at);
+
+    const likesCount =
+      postData.actions_summary.find((action) => action.id === 2)?.count || 0;
+
     const post: ForumPost = {
       id: postData.id,
       name: postData.name,
@@ -45,7 +49,7 @@ export const getThreadPosts = (threadId: string) => {
       displayUsername: postData.display_username,
       reads: postData.reads,
       readersCount: postData.readers_count,
-      actionsSummary: postData.actions_summary,
+      likesCount: likesCount,
       cooked: postData.cooked,
       raw: postData.raw,
       postNumber: postData.post_number,

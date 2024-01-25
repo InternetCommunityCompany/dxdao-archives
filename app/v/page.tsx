@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import VideoCard from "./_components/VideoCard";
 import { getTags, getVideoData } from "./_utils/utils";
+import { FaCircleInfo } from "react-icons/fa6";
 
 const VIDEOS_PER_PAGE = 24;
 
@@ -40,6 +41,10 @@ export default function Videos() {
 
   return (
     <div>
+      <div className="flex flex-row justify-center items-center mt-8 border-stone-400 border-2 p-4 rounded-lg gap-3 text-stone-700 font-serif">
+        <FaCircleInfo size={14} className="fill-stone-700" /> Click on a video
+        to find a summary of the video transcript.
+      </div>
       <div className="flex flex-row justify-center mt-8">
         <span
           onClick={() => setActiveTag(null)}
